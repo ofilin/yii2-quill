@@ -29,4 +29,10 @@ class QuillAsset extends AssetBundle
 
         parent::registerAssetFiles($view);
     }
+    
+    public $depends = [
+        'yii\web\JqueryAsset',
+        'yii\web\YiiAsset',
+        'yii\bootstrap\BootstrapAsset',
+    ];
 }
