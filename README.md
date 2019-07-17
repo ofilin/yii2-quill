@@ -26,7 +26,7 @@ Add the package to your `composer.json`:
         }
     }
 
-and run `composer update` or alternatively run `composer require ofilin/quill:^0.1`
+and run `composer update` or alternatively run `composer require ofilin/quill:^0.3`
 
 ### Usage
 
