@@ -9,6 +9,8 @@ class QuillAsset extends AssetBundle
 
     public $theme;
 
+    public $registerEmoji = false;
+
     public $sourcePath = '@ofilin/quill/src/dist';
 
 
@@ -27,9 +29,14 @@ class QuillAsset extends AssetBundle
 
         $this->js = ['quill.min.js'];
 
+        if ($this->registerEmoji) {
+            $this->css[] = 'quill-emoji.css';
+            $this->js[] = 'quill-emoji.js';
+        }
+
         parent::registerAssetFiles($view);
     }
-    
+
     public $depends = [
         'yii\web\JqueryAsset',
         'yii\web\YiiAsset',

@@ -44,7 +44,7 @@ class Quill extends InputWidget
      * This property is skipped if $configuration is set.
      */
     public $theme = self::THEME_SNOW;
-    
+
     const TOOLBAR_FULL = 'FULL';
     const TOOLBAR_BASIC = 'BASIC';
 
@@ -126,7 +126,7 @@ class Quill extends InputWidget
      * @see Html::renderTagAttributes() for details on how attributes are being rendered.
      */
     public $options = ['style' => 'min-height:150px;'];
-    
+
     /**
      * @var string HTML tag for the editor.
      * @since 2.0
@@ -134,15 +134,21 @@ class Quill extends InputWidget
     public $tag = 'div';
 
     /**
+     * @var bool
+     * Use emoji smiles
+     */
+    public $emoji = false;
+
+    /**
      * @inheritdoc
      */
     public static $autoIdPrefix = 'quill-';
-    
+
     /**
      * @var string ID of the editor.
      */
     protected $_fieldId;
-    
+
     /**
      * @var array
      * @since 2.0
@@ -171,16 +177,16 @@ class Quill extends InputWidget
         if (!empty($this->modules) && !\is_array($this->modules)) {
             throw new InvalidConfigException('The "modules" property must be an array!');
         }
-        
+
         parent::init();
-        
+
         $this->_fieldId = $this->options['id'];
         $this->options['id'] = 'editor-' . $this->id;
-        
+
         $this->prepareOptions();
     }
 
-    
+
     /**
      * Prepares Quill configuration.
      */
@@ -212,7 +218,7 @@ class Quill extends InputWidget
             if (!empty($this->formats)) {
                 $this->_quillConfiguration['formates'] = $this->formats;
             }
-            
+
             if (!empty($this->modules)) {
                 foreach ($this->modules as $module => $config) {
                     $this->_quillConfiguration['modules'][$module] = $config;
@@ -222,9 +228,13 @@ class Quill extends InputWidget
             if (!empty($this->toolbarOptions)) {
                 $this->_quillConfiguration['modules']['toolbar'] = $this->renderToolbar();
             }
+
+            if ($this->emoji) {
+                $this->_quillConfiguration['modules']['emoji-toolbar'] = true;
+            }
         }
     }
-    
+
     /**
      * @inheritdoc
      */
@@ -246,7 +256,7 @@ class Quill extends InputWidget
                 $this->tag, $this->value, $this->options
             );
     }
-    
+
     /**
      * Registers widget assets.
      * Note that Quill works without jQuery.
@@ -257,10 +267,14 @@ class Quill extends InputWidget
 
         $asset = QuillAsset::register($view);
         $asset->theme = $this->theme;
-        
+
+        if ($this->emoji) {
+            $asset->registerEmoji = true;
+        }
+
         $configs = Json::encode($this->_quillConfiguration);
         $editor = 'q_' . preg_replace('~[^0-9_\p{L}]~u', '_', $this->id);
-        
+
         $js = "var $editor=new Quill(\"#editor-{$this->id}\",$configs);";
         $js .= "document.getElementById(\"editor-{$this->id}\").onclick=function(e){document.querySelector(\"#editor-{$this->id} .ql-editor\").focus();};";
         $js .= "$editor.on('text-change',function(){document.getElementById(\"{$this->_fieldId}\").value=$editor.root.innerHTML;});";
@@ -271,7 +285,7 @@ class Quill extends InputWidget
 
         $view->registerJs($js, View::POS_END);
     }
-    
+
     /**
      * Prepares predefined set of buttons.
      * @return bool|array
@@ -352,7 +366,20 @@ class Quill extends InputWidget
                 ],
             ];
         }
-
+        if (self::recursive_array_search("emoji", $this->toolbarOptions) !== false) {
+            $this->emoji = true;
+        }
         return $this->toolbarOptions;
+    }
+
+    public static function recursive_array_search($needle, $haystack)
+    {
+        foreach ($haystack as $key => $value) {
+            $current_key = $key;
+            if ($needle === $value OR (is_array($value) && self::recursive_array_search($needle, $value) !== false)) {
+                return $current_key;
+            }
+        }
+        return false;
     }
 }

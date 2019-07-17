@@ -14,6 +14,8 @@ You can find Quill at https://quilljs.com/
 
 ## yii2-quill
 
+* Added Emoji support
+
 ### Installation
 
 Add the package to your `composer.json`:
@@ -36,79 +38,13 @@ Or as a standalone widget
   
     <?= \ofilin\quill\Quill::widget(['name' => 'editor', 'value' => '']) ?>
 
-
-### Basic parameters
-
- - **theme** *string* default `'snow'`  
-   `'snow'` (`Quill::THEME_SNOW`) for Quill's [snow theme](https://quilljs.com/docs/themes/#snow),  
-   `'bubble'` (`Quill::THEME_BUBBLE`) for Quill's [bubble theme](https://quilljs.com/docs/themes/#bubble),  
-   `false` or `null` to remove theme.
-   See [Quill's documentation for themes](https://quilljs.com/docs/themes/).
-
- - **toolbarOptions** *boolean|string|array* default `true`  
-   `true` for theme's default toolbar,  
-   `'FULL'` (`Quill::TOOLBAR_FULL`) for full Quill's toolbar,  
-   `'BASIC'` (`Quill::TOOLBAR_BASIC`) for few basic toolbar options,  
-   *array* for toolbar configuration (see below).  
-
-### Toolbar
-
-Quill's toolbar from version 1.0 can be easily configured with custom set of buttons.  
-See [Toolbar module](https://quilljs.com/docs/modules/toolbar/) documentation for details.
-
-You can pass PHP array to `'toolbarOptions'` parameter to configure this module (it will be JSON-encoded).
-
-For example, to get:
-
-```js
-new Quill('#editor', {
-    modules: {
-        toolbar: [['bold', 'italic', 'underline'], [{'color': []}]]
-    }
-});
+With Emoji plugin
 ```
-
-add the following code in widget configuration:
-
-```php
-[
-    'toolbarOptions' => [['bold', 'italic', 'underline'], [['color' => []]]],
-],
+<?= $form->field($model, 'text_msg')->label(false)->widget(\ofilin\quill\Quill::class, [
+    'theme' => 'snow',
+    'placeholder' => 'Text',
+    'toolbarOptions' => [
+        ["bold", "italic", "code", "link", "emoji"],
+    ],
+]) ?>
 ```
-
-## Additional information
-
-### Container and form's input
-
-Quill editor is rendered in `div` container (this can be changed by setting `'tag'` parameter) 
-and edited content is copied to hidden input field so it can be used in forms.
-
-### Editor box's height
-
-Default editor height is *150px* (this can be changed by setting `'options'` parameter) and 
-its box extends as new text lines are added.
-
-### Quill source
-
-Quill's JS code is provided by CDN. You can change the Quill's version set with the current yii2-quill's 
-release by changing `'quillVersion'` parameter but some options may not work correctly in this case.
-
-### Additional JavaScript code
-
-You can use parameter `'js'` to append additional JS code.  
-For example, to disable user input Quill's API provides this JS:
-
-```js
-quill.enable(false);
-```
-
-To get the same through widget's configuration add the following code:
-
-```php
-[
-    'js' => '{quill}.enable(false);',
-],
-```
-
-`{quill}` placeholder will be automatically replaced with the editor's object variable name.  
-For more details about Quill's API visit https://quilljs.com/docs/api/
