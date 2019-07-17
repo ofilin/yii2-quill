@@ -2,6 +2,7 @@
 
 namespace ofilin\quill;
 
+use Codeception\Module\EmulateModuleHelper;
 use yii\base\InvalidConfigException;
 use yii\helpers\Html;
 use yii\helpers\Json;
@@ -269,7 +270,7 @@ class Quill extends InputWidget
         $asset->theme = $this->theme;
 
         if ($this->emoji) {
-            $asset->registerEmoji = true;
+            EmojiAsset::register($view);
         }
 
         $configs = Json::encode($this->_quillConfiguration);

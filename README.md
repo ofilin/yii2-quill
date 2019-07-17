@@ -14,7 +14,7 @@ You can find Quill at https://quilljs.com/
 
 ## yii2-quill
 
-* Added Emoji support
+* Added Emoji support (Note: Register asset `ofilin\quill\EmojiAsset` on your pages edited with quill for correct display Emoji smiles)
 
 ### Installation
 
