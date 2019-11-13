@@ -375,6 +375,9 @@ class Quill extends InputWidget
 
     public static function recursive_array_search($needle, $haystack)
     {
+        if (!is_array($haystack)){
+            return false;
+        }
         foreach ($haystack as $key => $value) {
             $current_key = $key;
             if ($needle === $value OR (is_array($value) && self::recursive_array_search($needle, $value) !== false)) {
