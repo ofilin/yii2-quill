@@ -22,7 +22,7 @@ Add the package to your `composer.json`:
 
     {
         "require": {
-            "ofilin/quill": "^0.3"
+            "ofilin/yii2-quill": "^0.3"
         }
     }
 
