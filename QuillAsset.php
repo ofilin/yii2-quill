@@ -10,7 +10,17 @@ class QuillAsset extends AssetBundle
     public $theme;
 
     public $sourcePath = '@ofilin/quill/src/dist';
-
+    
+    public function init()
+    {
+        parent::init();
+        
+        if (class_exists('yii\\bootstrap4\\BootstrapAsset')){
+            $this->depends[] = 'yii\bootstrap4\BootstrapAsset';
+        } else {
+            $this->depends[] = 'yii\bootstrap\BootstrapAsset';
+        }
+    }
 
     public function registerAssetFiles($view)
     {
@@ -30,9 +40,5 @@ class QuillAsset extends AssetBundle
         parent::registerAssetFiles($view);
     }
 
-    public $depends = [
-        'yii\web\JqueryAsset',
-        'yii\web\YiiAsset',
-        'yii\bootstrap\BootstrapAsset',
-    ];
+    public $depends = [];
 }
